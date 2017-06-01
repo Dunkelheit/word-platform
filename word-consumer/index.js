@@ -1,9 +1,17 @@
 'use strict';
 
+const bunyan = require('bunyan');
 const lynx = require('lynx');
 const kafka = require('kafka-node');
 
-console.log('Starting up word-consumer');
+const config = require('./config');
+
+const log = bunyan.createLogger({
+    name: 'word-consumer',
+    level: config.get('logging.level')
+});
+
+log.info('Starting up word-consumer');
 
 const metrics = new lynx('metrics', 8125);
 
@@ -22,11 +30,11 @@ let producerReady = false;
 
 consumer.on('message', function (message) {
     metrics.increment('messages.received.word-consumer');
-    console.log(`Word consumer received a message in the topic ${message.topic}: ${message.value}`);
+    log.debug({ topic: message.topic, message: message.value }, 'Word consumer received a message');
     const points = message.value.split(' ').length;
-    console.log(`Word consumer transforms the message into points: ${points}`);
+    log.debug({ points }, 'Word consumer transforms the message into points');
     if (!producerReady) {
-        console.log('Producer is not ready yet!');
+        log.fatal('Producer is not ready yet!');
     }
     const payloads = [{
         topic: 'Points',
@@ -36,13 +44,13 @@ consumer.on('message', function (message) {
     producer.send(payloads, function (err, data) {
         metrics.increment('messages.sent.word-consumer');
         if (err) {
-            console.log('An error has occurred!');
-            console.log(err);
+            log.error(err, 'An error has occurred!');
         }
-        console.log(`Word consumer sent some transformed data: ${JSON.stringify(data)}`);
+        log.debug({ data }, 'Word consumer sent some transformed data');
     });
 });
 
 producer.on('ready', function () {
     producerReady = true;
+    log.info('Producer is ready');
 });

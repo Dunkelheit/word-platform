@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bunyan": "^1.8.10",
+    "convict": "^3.0.0",
     "d20": "1.4.1",
     "kafka-node": "1.6.2",
     "lorem-ipsum": "^1.0.4",

@@ -1,9 +1,17 @@
 'use strict';
 
+const bunyan = require('bunyan');
 const lynx = require('lynx');
 const kafka = require('kafka-node');
 
-console.log('Starting up points-consumer');
+const config = require('./config');
+
+const log = bunyan.createLogger({
+    name: 'points-consumer',
+    level: config.get('logging.level')
+});
+
+log.info('Starting up points-consumer');
 
 const metrics = new lynx('metrics', 8125);
 
@@ -17,5 +25,5 @@ const consumer = new Consumer(client, [{ topic: 'Points', partition: 0 }], { aut
 
 consumer.on('message', function (message) {
     metrics.increment('messages.received.points-consumer');
-    console.log(`Points consumer received a message in the topic ${message.topic}: ${message.value}`);
+    log.debug({ topic: message.topic, message: message.value }, 'Points consumer received a message');
 });

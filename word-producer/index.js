@@ -1,12 +1,20 @@
 'use strict';
 
+const bunyan = require('bunyan');
 const d20 = require('d20');
 const loremIpsum = require('lorem-ipsum');
 const lynx = require('lynx');
 const kafka = require('kafka-node');
 const restify = require('restify');
 
-console.log('Starting up word-producer');
+const config = require('./config');
+
+const log = bunyan.createLogger({
+    name: 'word-producer',
+    level: config.get('logging.level')
+});
+
+log.info('Starting up word-producer');
 
 const metrics = new lynx('metrics', 8125);
 
@@ -33,29 +41,26 @@ function intervalHandler() {
     producer.send(payloads, function (err, data) {
         metrics.increment('messages.sent.word-producer');
         if (err) {
-            console.log('An error has occurred!');
-            console.log(err);
+            log.error(err, 'An error has occurred!');
         }
-        console.log(`Word producer sent some data: ${JSON.stringify(data)}`);
+        log.debug({ data },'Word producer sent some data');
     });
 }
 
 producer.on('ready', function () {
-    console.log('Producer ready');
+    log.info('Producer ready');
     intervalHandlerId = setInterval(intervalHandler, messageRate);
 });
 
 producer.on('error', function (err) {
-    console.log('Producer error');
-    console.log(err);
+    log.error(err, 'Producer error');
 });
 
 const server = restify.createServer();
 server.use(restify.bodyParser());
 
 server.post('/messages/rate', function (req, res, next) {
-    console.log('Received request to set new message rate');
-    console.log(req.body);
+    log.info({ body: req.body }, 'Received request to set new message rate');
     messageRate = parseInt(req.body.rate, 10);
     clearTimeout(intervalHandlerId);
     intervalHandlerId = setInterval(intervalHandler, messageRate);
@@ -64,5 +69,5 @@ server.post('/messages/rate', function (req, res, next) {
 });
 
 server.listen(9091, function() {
-    console.log('%s listening at %s', server.name, server.url);
+    log.info({ name: server.name, url: server.url }, 'Server listening');
 });
