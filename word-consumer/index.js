@@ -1,8 +1,11 @@
 'use strict';
 
+const lynx = require('lynx');
 const kafka = require('kafka-node');
 
 console.log('Starting up word-consumer');
+
+const metrics = new lynx('metrics', 8125);
 
 const Producer = kafka.Producer;
 const Consumer = kafka.Consumer;
@@ -18,6 +21,7 @@ const consumer = new Consumer(client, [{ topic: 'Words', partition: 0}], { autoC
 let producerReady = false;
 
 consumer.on('message', function (message) {
+    metrics.increment('messages.received.word-consumer');
     console.log(`Word consumer received a message in the topic ${message.topic}: ${message.value}`);
     const points = message.value.split(' ').length;
     console.log(`Word consumer transforms the message into points: ${points}`);
@@ -30,6 +34,7 @@ consumer.on('message', function (message) {
     }];
 
     producer.send(payloads, function (err, data) {
+        metrics.increment('messages.sent.word-consumer');
         if (err) {
             console.log('An error has occurred!');
             console.log(err);

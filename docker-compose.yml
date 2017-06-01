@@ -12,6 +12,9 @@ services:
       - "9092:9092"
     links:
       - zookeeper:zk
+    depends_on:
+      - metrics
+      - zookeeper
     environment:
       HOSTNAME_COMMAND: "route -n | awk '/UG[ \t]/{print $$2}'"
       KAFKA_ADVERTISED_PORT: "9092"
@@ -24,6 +27,11 @@ services:
       test: ["CMD", "grep", "No checkpointed highwatermark is found for partition Points-1", "/opt/kafka/logs/server.log"]
       interval: 1s
       retries: 60
+
+  metrics:
+    image: kamon/grafana_graphite
+    ports:
+      - "80:80"
 
   word-producer:
     build: word-producer

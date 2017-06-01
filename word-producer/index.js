@@ -1,10 +1,13 @@
 'use strict';
 
-const kafka = require('kafka-node');
 const d20 = require('d20');
 const loremIpsum = require('lorem-ipsum');
+const lynx = require('lynx');
+const kafka = require('kafka-node');
 
 console.log('Starting up word-producer');
+
+const metrics = new lynx('metrics', 8125);
 
 const Producer = kafka.Producer;
 const client = new kafka.Client('zookeeper:2181', 'word-producer-client', {
@@ -26,6 +29,7 @@ producer.on('ready', function () {
             })]
         }];
         producer.send(payloads, function (err, data) {
+            metrics.increment('messages.sent.word-producer');
             if (err) {
                 console.log('An error has occurred!');
                 console.log(err);

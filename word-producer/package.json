@@ -9,8 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "d20": "^1.4.1",
-    "kafka-node": "^1.6.2",
-    "lorem-ipsum": "^1.0.4"
+    "d20": "1.4.1",
+    "kafka-node": "1.6.2",
+    "lorem-ipsum": "^1.0.4",
+    "lynx": "0.2.0"
   }
 }

@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "kafka-node": "^1.6.2"
+    "kafka-node": "1.6.2",
+    "lynx": "0.2.0"
   }
 }
