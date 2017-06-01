@@ -1,0 +1,44 @@
+version: "2.1"
+
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: wurstmeister/kafka
+    ports:
+      - "9092:9092"
+    links:
+      - zookeeper:zk
+    environment:
+      HOSTNAME_COMMAND: "route -n | awk '/UG[ \t]/{print $$2}'"
+      KAFKA_ADVERTISED_PORT: "9092"
+      KAFKA_ZOOKEEPER_CONNECT: "zk:2181"
+      KAFKA_CREATE_TOPICS: "Words:2:1,Points:2:1"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    # Dirty ass hack to make sure word-producer doesn't start until kafka is "ready"
+    healthcheck:
+      test: ["CMD", "grep", "No checkpointed highwatermark is found for partition Points-1", "/opt/kafka/logs/server.log"]
+      interval: 1s
+      retries: 60
+
+  word-producer:
+    build: word-producer
+    depends_on:
+      kafka:
+        condition: service_healthy
+
+  word-consumer:
+    build: word-consumer
+    depends_on:
+      kafka:
+        condition: service_healthy
+
+  points-consumer:
+    build: points-consumer
+    depends_on:
+      kafka:
+        condition: service_healthy

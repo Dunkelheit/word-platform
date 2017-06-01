@@ -1,0 +1,16 @@
+{
+  "name": "word-producer",
+  "version": "0.0.1",
+  "description": "A word producer",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "d20": "^1.4.1",
+    "kafka-node": "^1.6.2",
+    "lorem-ipsum": "^1.0.4"
+  }
+}
