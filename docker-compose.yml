@@ -35,6 +35,8 @@ services:
 
   word-producer:
     build: word-producer
+    ports:
+      - "9091:9091"
     depends_on:
       kafka:
         condition: service_healthy
