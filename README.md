@@ -2,6 +2,14 @@
 
 A platform of Node.js services using Kafka.
 
+## Running
+
+Using [Docker Compose](https://docs.docker.com/compose/):
+
+```
+> docker-compose up
+```
+
 ## Services
 
 ### Word producer
