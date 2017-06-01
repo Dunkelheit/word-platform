@@ -36,7 +36,7 @@ producer.on('ready', function () {
             }
             console.log(`Word producer sent some data: ${JSON.stringify(data)}`);
         });
-    }, 2000);
+    }, 100);
 });
 
 producer.on('error', function (err) {

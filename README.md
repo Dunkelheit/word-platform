@@ -49,3 +49,10 @@ word-consumer_1    | Word consumer transforms the message into points: 63
 points-consumer_1  | Points consumer received a message in the topic Points: 63
 word-consumer_1    | Word consumer sent some transformed data: {"Points":{"0":3}}
 ```
+
+## Metrics
+
+There's also a Grafana / Graphite image included as part of the project.
+
+Log in with `admin` / `admin` to http://localhost:80, add a new data source pointing to Graphite
+using the URL `http://localhost:8000`, and load the dashboard present in the folder `metrics/`.
