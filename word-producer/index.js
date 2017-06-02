@@ -1,18 +1,12 @@
 'use strict';
 
-const bunyan = require('bunyan');
 const d20 = require('d20');
 const loremIpsum = require('lorem-ipsum');
 const lynx = require('lynx');
 const kafka = require('kafka-node');
 const restify = require('restify');
 
-const config = require('./config');
-
-const log = bunyan.createLogger({
-    name: 'word-producer',
-    level: config.get('logging.level')
-});
+const log = require('./log');
 
 log.info('Starting up word-producer');
 

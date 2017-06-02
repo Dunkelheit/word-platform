@@ -1,15 +1,9 @@
 'use strict';
 
-const bunyan = require('bunyan');
 const lynx = require('lynx');
 const kafka = require('kafka-node');
 
-const config = require('./config');
-
-const log = bunyan.createLogger({
-    name: 'points-consumer',
-    level: config.get('logging.level')
-});
+const log = require('./log');
 
 log.info('Starting up points-consumer');
 
