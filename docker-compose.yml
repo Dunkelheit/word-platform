@@ -10,6 +10,7 @@ services:
     image: wurstmeister/kafka
     ports:
       - "9092:9092"
+      - "1099:1099"
     links:
       - zookeeper:zk
     depends_on:
@@ -27,6 +28,20 @@ services:
       test: ["CMD", "grep", "No checkpointed highwatermark is found for partition Points-1", "/opt/kafka/logs/server.log"]
       interval: 1s
       retries: 60
+
+  kafkamanager:
+    image: sheepkiller/kafka-manager
+    ports:
+      - "9000:9000"
+    environment:
+      APPLICATION_SECRET: "letmein"
+      ZK_HOSTS: "zk:2181"
+      JMX_PORT: 1099
+    links:
+      - zookeeper:zk
+    depends_on:
+      - kafka
+      - zookeeper
 
   metrics:
     image: kamon/grafana_graphite

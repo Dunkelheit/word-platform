@@ -56,3 +56,7 @@ There's also a Grafana / Graphite image included as part of the project.
 
 Log in with `admin` / `admin` to http://localhost:80, add a new data source pointing to Graphite
 using the URL `http://localhost:8000`, and load the dashboard present in the folder `metrics/`.
+
+## Kafka manager
+
+Kafka manager is also running on port `9000`.
