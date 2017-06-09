@@ -1,13 +1,11 @@
 'use strict';
 
-const lynx = require('lynx');
 const kafka = require('kafka-node');
 
 const log = require('./log');
+const metrics = require('./metrics');
 
 log.info('Starting up word-consumer');
-
-const metrics = new lynx('metrics', 8125);
 
 const Producer = kafka.Producer;
 const Consumer = kafka.Consumer;
@@ -25,14 +23,20 @@ let producerReady = false;
 consumer.on('message', function (message) {
     metrics.increment('messages.received.word-consumer');
     log.debug({ topic: message.topic, message: message.value }, 'Word consumer received a message');
-    const points = message.value.split(' ').length;
-    log.debug({ points }, 'Word consumer transforms the message into points');
+    const messageObject = JSON.parse(message.value);
+    const points = messageObject.message.split(' ').length;
+    const userId = messageObject.userId;
+    log.debug({ points, userId }, 'Word consumer transforms the message into points');
     if (!producerReady) {
         log.fatal('Producer is not ready yet!');
     }
+    const payloadMessage = JSON.stringify({
+        points,
+        userId
+    });
     const payloads = [{
         topic: 'Points',
-        messages: [points]
+        messages: [payloadMessage]
     }];
 
     producer.send(payloads, function (err, data) {
@@ -40,7 +44,7 @@ consumer.on('message', function (message) {
         if (err) {
             log.error(err, 'An error has occurred!');
         }
-        log.debug({ data }, 'Word consumer sent some transformed data');
+        log.debug({ data, payloadMessage }, 'Word consumer sent some transformed data');
     });
 });
 

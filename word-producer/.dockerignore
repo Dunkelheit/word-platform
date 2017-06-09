@@ -1,14 +1,1 @@
-.git
 node_modules
-*.md
-logs
-test
-junit.xml
-bin
-gulpfile.js
-.test*
-.git*
-dump.rdb
-.editorconfig
-.eslintrc
-/nginx/

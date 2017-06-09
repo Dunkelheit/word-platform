@@ -1,16 +1,17 @@
 'use strict';
 
+const _ = require('lodash');
 const d20 = require('d20');
 const loremIpsum = require('lorem-ipsum');
-const lynx = require('lynx');
 const kafka = require('kafka-node');
 const restify = require('restify');
 
 const log = require('./log');
+const metrics = require('./metrics');
+
+const USER_IDS = ['user1', 'user2', 'user3', 'user4', 'user5'];
 
 log.info('Starting up word-producer');
-
-const metrics = new lynx('metrics', 8125);
 
 const Producer = kafka.Producer;
 const client = new kafka.Client('zookeeper:2181', 'word-producer-client', {
@@ -20,24 +21,28 @@ const client = new kafka.Client('zookeeper:2181', 'word-producer-client', {
 
 const producer = new Producer(client);
 
-let messageRate = 200;
+let messageRate = 500;
 let intervalHandlerId;
 
 function intervalHandler() {
-    const payloads = [{
-        topic: 'Words',
-        messages: [loremIpsum({
+    const payloadMessage = JSON.stringify({
+        message: loremIpsum({
             count: d20.roll('1d8'),
             units: 'sentences',
             format: 'plain'
-        })]
+        }),
+        userId: _.sample(USER_IDS)
+    });
+    const payloads = [{
+        topic: 'Words',
+        messages: [payloadMessage]
     }];
     producer.send(payloads, function (err, data) {
         metrics.increment('messages.sent.word-producer');
         if (err) {
             log.error(err, 'An error has occurred!');
         }
-        log.debug({ data },'Word producer sent some data');
+        log.debug({ data, payloadMessage },'Word producer sent some data');
     });
 }
 

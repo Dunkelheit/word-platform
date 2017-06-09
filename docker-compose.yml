@@ -52,18 +52,24 @@ services:
     build: word-producer
     ports:
       - "9091:9091"
+    environment:
+      LOGGING: "INFO"
     depends_on:
       kafka:
         condition: service_healthy
 
   word-consumer:
     build: word-consumer
+    environment:
+      LOGGING: "INFO"
     depends_on:
       kafka:
         condition: service_healthy
 
   points-consumer:
     build: points-consumer
+    environment:
+      LOGGING: "INFO"
     depends_on:
       kafka:
         condition: service_healthy
