@@ -2,6 +2,8 @@
 
 A platform of Node.js services using Kafka.
 
+![screen shot 2017-06-13 at 15 05 23](https://user-images.githubusercontent.com/448131/27083768-e7f4c4a4-5049-11e7-9573-40a8df7ff47a.png)
+
 ## Running
 
 Using [Docker Compose](https://docs.docker.com/compose/):
