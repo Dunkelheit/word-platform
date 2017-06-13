@@ -55,6 +55,8 @@ producer.on('error', function (err) {
     log.error(err, 'Producer error');
 });
 
+// Server
+
 const server = restify.createServer();
 server.use(restify.bodyParser());
 

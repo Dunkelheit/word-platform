@@ -1,6 +1,7 @@
 'use strict';
 
 const kafka = require('kafka-node');
+const restify = require('restify');
 
 const log = require('./log');
 const metrics = require('./metrics');
@@ -28,6 +29,33 @@ consumer.on('message', function (message) {
     } else {
         points[userId] = messageObject.points;
     }
-    metrics.gauge(`points.${messageObject.userId}`, `+${messageObject.points}`);
+    const symbol = messageObject.points > 0 ? '+' : '';
+    metrics.gauge(`points.${messageObject.userId}`, `${symbol}${messageObject.points}`);
     log.info({ userId, mutation: messageObject.points, points: points[userId] }, 'Mutating user points');
+});
+
+// Server
+
+const server = restify.createServer();
+server.use(restify.bodyParser());
+
+server.get('/points/:userId', function (req, res, next) {
+    // TODO: Check later if I can use some npm link magic to externalize common modules like logging or metrics
+    const userId = req.params.userId;
+    log.debug({ userId }, 'Received request to get user points');
+    if (!points[userId]) {
+        res.send(404, {
+            error: 'User not found'
+        });
+        return next();
+    }
+    res.send(200, {
+        userId,
+        points: points[userId]
+    });
+    next();
+});
+
+server.listen(9091, function() {
+    log.info({ name: server.name, url: server.url }, 'Server listening');
 });

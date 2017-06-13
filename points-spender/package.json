@@ -1,7 +1,7 @@
 {
-  "name": "points-consumer",
+  "name": "points-spender",
   "version": "0.0.1",
-  "description": "A points consumer",
+  "description": "A fella that spends lots of points",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,8 +11,9 @@
   "dependencies": {
     "bunyan": "^1.8.10",
     "convict": "^3.0.0",
+    "d20": "^1.4.1",
     "kafka-node": "1.6.2",
     "lynx": "0.2.0",
-    "restify": "^4.3.0"
+    "request": "^2.81.0"
   }
 }
