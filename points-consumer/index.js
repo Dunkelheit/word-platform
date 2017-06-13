@@ -29,6 +29,10 @@ consumer.on('message', function (message) {
     } else {
         points[userId] = messageObject.points;
     }
+    if (points[userId] < 0) {
+        // TODO: Add message to error topic if it's going to be 0 or less
+        points[userId] = 0;
+    }
     const symbol = messageObject.points > 0 ? '+' : '';
     metrics.gauge(`points.${messageObject.userId}`, `${symbol}${messageObject.points}`);
     log.info({ userId, mutation: messageObject.points, points: points[userId] }, 'Mutating user points');
