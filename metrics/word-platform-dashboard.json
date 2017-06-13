@@ -53,7 +53,7 @@
           "targets": [
             {
               "refId": "A",
-              "target": "stats.gauges.points.*",
+              "target": "aliasByNode(stats.gauges.points.*, 3)",
               "textEditor": false
             }
           ],
@@ -135,11 +135,11 @@
           "targets": [
             {
               "refId": "D",
-              "target": "stats.counters.messages.received.word-consumer.count"
+              "target": "aliasByNode(stats.counters.messages.received.word-consumer.count, 3)"
             },
             {
               "refId": "B",
-              "target": "stats.counters.messages.sent.word-consumer.count"
+              "target": "aliasByNode(stats.counters.messages.sent.word-consumer.count, 3)"
             }
           ],
           "timeFrom": null,
@@ -212,7 +212,7 @@
           "targets": [
             {
               "refId": "A",
-              "target": "stats.counters.messages.sent.word-producer.count"
+              "target": "aliasByNode(stats.counters.messages.sent.word-producer.count, 3)"
             }
           ],
           "timeFrom": null,
@@ -285,7 +285,7 @@
           "targets": [
             {
               "refId": "A",
-              "target": "stats.counters.messages.received.points-consumer.count"
+              "target": "aliasByNode(stats.counters.messages.received.points-consumer.count, 3)"
             }
           ],
           "timeFrom": null,
@@ -358,11 +358,11 @@
           "targets": [
             {
               "refId": "A",
-              "target": "stats.counters.messages.received.points-spender.count"
+              "target": "aliasByNode(stats.counters.messages.received.points-spender.count, 3)"
             },
             {
               "refId": "B",
-              "target": "stats.counters.messages.sent.points-spender.count"
+              "target": "aliasByNode(stats.counters.messages.sent.points-spender.count, 3)"
             }
           ],
           "timeFrom": null,
@@ -437,6 +437,6 @@
   },
   "refresh": "5s",
   "schemaVersion": 12,
-  "version": 1,
+  "version": 5,
   "links": []
 }
