@@ -53,7 +53,7 @@ services:
     ports:
       - "9091:9091"
     environment:
-      LOGGING: "DEBUG"
+      LOGGING: "INFO"
     depends_on:
       kafka:
         condition: service_healthy
@@ -61,7 +61,7 @@ services:
   word-consumer:
     build: word-consumer
     environment:
-      LOGGING: "DEBUG"
+      LOGGING: "INFO"
     depends_on:
       kafka:
         condition: service_healthy
@@ -71,7 +71,7 @@ services:
     ports:
       - "9090:9091"
     environment:
-      LOGGING: "DEBUG"
+      LOGGING: "INFO"
     depends_on:
       kafka:
         condition: service_healthy
@@ -79,7 +79,7 @@ services:
   points-spender:
     build: points-spender
     environment:
-      LOGGING: "DEBUG"
+      LOGGING: "INFO"
     depends_on:
       kafka:
         condition: service_healthy
